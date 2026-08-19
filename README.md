@@ -6,12 +6,7 @@
 
 ## Demo
 
-<!--
-  Drop a screenshot or gif of the conversation in action here (I'd recommend
-  recording with QuickTime/Kap and converting to gif with gifski). Save it
-  to docs/demo.gif and replace the line below with: ![demo](docs/demo.gif)
--->
-`[ screenshot / gif here ]`
+![TaskMind](https://github.com/Biahellens/TaskMind-AI/blob/main/desktop-app.png)
 
 ## What this is
 
