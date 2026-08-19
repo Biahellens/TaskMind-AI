@@ -6,7 +6,7 @@ export function Header() {
       </div>
       <div>
         <h1 className="text-sm font-semibold text-neutral-100">TaskMind AI</h1>
-        <p className="text-xs text-neutral-500">Agente com tool use real — não só responde, age</p>
+        <p className="text-xs text-neutral-500">Agent with real tool use — it doesn't just answer, it acts</p>
       </div>
     </header>
   );

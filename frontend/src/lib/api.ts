@@ -16,7 +16,7 @@ export async function streamChat(
   });
 
   if (!res.ok || !res.body) {
-    throw new Error(`Backend respondeu ${res.status}`);
+    throw new Error(`Backend responded with ${res.status}`);
   }
 
   const reader = res.body.getReader();
@@ -40,7 +40,7 @@ export async function streamChat(
       try {
         onEvent(JSON.parse(payload) as AgentEvent);
       } catch {
-        // ignora chunk malformado, não derruba o stream inteiro
+        // ignore malformed chunk, don't break the whole stream
       }
     }
   }

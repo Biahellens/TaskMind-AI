@@ -15,9 +15,9 @@ export function ToolChip({ part }: { part: ToolCallPart }) {
         ].join(" ")}
       >
         <span className={isRunning ? "animate-pulse" : ""}>{meta.icon}</span>
-        <span>{isRunning ? meta.running : isError ? `Erro: ${meta.done}` : meta.done}</span>
+        <span>{isRunning ? meta.running : isError ? "Failed" : meta.done}</span>
         {!isRunning && (
-          <span className="ml-1 text-xs text-neutral-500 group-open:hidden">(ver detalhes)</span>
+          <span className="ml-1 text-xs text-neutral-500 group-open:hidden">(view details)</span>
         )}
       </summary>
       <div className="border-t border-neutral-800 px-3 py-2 text-xs">

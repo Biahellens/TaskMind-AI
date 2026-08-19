@@ -92,7 +92,7 @@ export function useChat() {
         setMessages((prev) =>
           prev.map((m) =>
             m.id === assistantId
-              ? { ...m, pending: false, error: err instanceof Error ? err.message : "Erro desconhecido" }
+              ? { ...m, pending: false, error: err instanceof Error ? err.message : "Unknown error" }
               : m,
           ),
         );

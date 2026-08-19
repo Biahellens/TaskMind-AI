@@ -5,9 +5,9 @@ import { MessageBubble } from "./components/MessageBubble";
 import { useChat } from "./hooks/useChat";
 
 const QUICK_PROMPTS = [
-  "Como está o clima em Lisboa hoje?",
-  "Busque as tendências de conteúdo em IA essa semana",
-  "Agende uma gravação pra sexta às 15h e me manda um resumo por e-mail",
+  "What's the weather like in Lisbon today?",
+  "Search for AI content trends this week",
+  "Schedule a shoot for Friday at 3pm and send me a summary by email",
 ];
 
 function App() {
@@ -26,7 +26,7 @@ function App() {
         {messages.length === 0 && (
           <div className="flex h-full flex-col items-center justify-center gap-4 text-center">
             <p className="text-sm text-neutral-500">
-              Pergunte algo que exija ação real — clima, busca na web, agenda ou e-mail.
+              Ask something that requires a real action — weather, web search, calendar or email.
             </p>
             <div className="flex flex-wrap justify-center gap-2">
               {QUICK_PROMPTS.map((prompt) => (

@@ -29,7 +29,7 @@ export function ChatInput({ onSend, disabled }: Props) {
         onKeyDown={handleKeyDown}
         disabled={disabled}
         rows={1}
-        placeholder="Pergunte algo, ex: 'como está o clima em Lisboa e o que tenho na agenda essa semana?'"
+        placeholder="Ask something, e.g. 'what's the weather in Lisbon and what's on my calendar this week?'"
         className="max-h-32 flex-1 resize-none rounded-xl border border-neutral-800 bg-neutral-900 px-4 py-2.5 text-sm text-neutral-100 placeholder:text-neutral-500 focus:outline-none focus:ring-1 focus:ring-indigo-500 disabled:opacity-50"
       />
       <button
@@ -37,7 +37,7 @@ export function ChatInput({ onSend, disabled }: Props) {
         disabled={disabled || !value.trim()}
         className="shrink-0 rounded-xl bg-indigo-600 px-4 py-2.5 text-sm font-medium text-white transition hover:bg-indigo-500 disabled:cursor-not-allowed disabled:opacity-40"
       >
-        Enviar
+        Send
       </button>
     </div>
   );
