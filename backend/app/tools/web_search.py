@@ -5,20 +5,21 @@ from app.config import settings
 TOOL_SPEC = {
     "name": "web_search",
     "description": (
-        "Busca informação atualizada na web. Use quando o usuário pedir algo que "
-        "depende de dados recentes: tendências, notícias, estatísticas, preços, "
-        "eventos atuais — qualquer coisa que você não teria certeza de saber de cor."
+        "Searches the web for up-to-date information. Use when the user asks for "
+        "something that depends on recent data: trends, news, statistics, prices, "
+        "current events — anything you wouldn't be confident knowing off the top "
+        "of your head."
     ),
     "input_schema": {
         "type": "object",
         "properties": {
             "query": {
                 "type": "string",
-                "description": "Termos de busca, em linguagem natural.",
+                "description": "Search terms, in natural language.",
             },
             "max_results": {
                 "type": "integer",
-                "description": "Número máximo de resultados. Padrão: 5.",
+                "description": "Maximum number of results. Default: 5.",
             },
         },
         "required": ["query"],
@@ -31,12 +32,12 @@ BASE_URL = "https://api.tavily.com/search"
 async def execute(tool_input: dict) -> dict:
     query = (tool_input.get("query") or "").strip()
     if not query:
-        return {"error": True, "message": "Query de busca não pode ser vazia."}
+        return {"error": True, "message": "Search query cannot be empty."}
 
     max_results = tool_input.get("max_results", 5)
 
     if not settings.tavily_api_key:
-        return {"error": True, "message": "TAVILY_API_KEY não configurada no servidor."}
+        return {"error": True, "message": "TAVILY_API_KEY is not configured on the server."}
 
     payload = {
         "api_key": settings.tavily_api_key,
@@ -49,12 +50,12 @@ async def execute(tool_input: dict) -> dict:
         try:
             resp = await client.post(BASE_URL, json=payload)
         except httpx.TimeoutException:
-            return {"error": True, "message": "Tempo esgotado na busca web."}
+            return {"error": True, "message": "Web search timed out."}
         except httpx.HTTPError as exc:
-            return {"error": True, "message": f"Falha de rede na busca web: {exc}"}
+            return {"error": True, "message": f"Network error during web search: {exc}"}
 
     if resp.status_code != 200:
-        return {"error": True, "message": f"Tavily retornou erro {resp.status_code}."}
+        return {"error": True, "message": f"Tavily returned an error ({resp.status_code})."}
 
     data = resp.json()
     results = [

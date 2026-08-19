@@ -10,24 +10,24 @@ _lock = asyncio.Lock()
 CREATE_TOOL_SPEC = {
     "name": "create_calendar_event",
     "description": (
-        "Cria um evento na agenda (ex: gravação de conteúdo, publicação, reunião). "
-        "Use quando o usuário pedir para agendar, marcar ou reservar algo."
+        "Creates a calendar event (e.g. a content shoot, a publish date, a "
+        "meeting). Use when the user asks to schedule, book, or reserve something."
     ),
     "input_schema": {
         "type": "object",
         "properties": {
-            "title": {"type": "string", "description": "Título do evento."},
+            "title": {"type": "string", "description": "Event title."},
             "date": {
                 "type": "string",
-                "description": "Data no formato YYYY-MM-DD.",
+                "description": "Date in YYYY-MM-DD format.",
             },
             "time": {
                 "type": "string",
-                "description": "Horário no formato HH:MM (24h). Opcional.",
+                "description": "Time in HH:MM (24h) format. Optional.",
             },
             "description": {
                 "type": "string",
-                "description": "Detalhes adicionais do evento. Opcional.",
+                "description": "Additional event details. Optional.",
             },
         },
         "required": ["title", "date"],
@@ -37,8 +37,8 @@ CREATE_TOOL_SPEC = {
 LIST_TOOL_SPEC = {
     "name": "list_calendar_events",
     "description": (
-        "Lista eventos da agenda. Use quando o usuário perguntar o que tem marcado, "
-        "se um dia está livre, ou quiser ver a agenda."
+        "Lists calendar events. Use when the user asks what's scheduled, whether "
+        "a day is free, or wants to see the calendar."
     ),
     "input_schema": {
         "type": "object",
@@ -46,8 +46,8 @@ LIST_TOOL_SPEC = {
             "date": {
                 "type": "string",
                 "description": (
-                    "Filtra por uma data exata no formato YYYY-MM-DD. "
-                    "Se omitido, retorna todos os próximos eventos."
+                    "Filters by an exact date in YYYY-MM-DD format. "
+                    "If omitted, returns all upcoming events."
                 ),
             },
         },
@@ -82,9 +82,9 @@ async def execute_create(tool_input: dict) -> dict:
     event_date = (tool_input.get("date") or "").strip()
 
     if not title:
-        return {"error": True, "message": "Título do evento não pode ser vazio."}
+        return {"error": True, "message": "Event title cannot be empty."}
     if not _validate_date(event_date):
-        return {"error": True, "message": "Data inválida, use o formato YYYY-MM-DD."}
+        return {"error": True, "message": "Invalid date, use YYYY-MM-DD format."}
 
     event = {
         "id": str(uuid.uuid4())[:8],
@@ -106,7 +106,7 @@ async def execute_create(tool_input: dict) -> dict:
 async def execute_list(tool_input: dict) -> dict:
     date_filter = tool_input.get("date")
     if date_filter and not _validate_date(date_filter):
-        return {"error": True, "message": "Data inválida, use o formato YYYY-MM-DD."}
+        return {"error": True, "message": "Invalid date, use YYYY-MM-DD format."}
 
     async with _lock:
         events = _read_events()

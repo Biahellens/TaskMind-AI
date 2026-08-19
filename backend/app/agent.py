@@ -8,13 +8,13 @@ from app.config import settings
 from app.tools import EXECUTORS, TOOLS
 
 SYSTEM_PROMPT = (
-    "Você é o TaskMind, um assistente pessoal para criadores de conteúdo. "
-    "Você tem ferramentas reais disponíveis (clima, busca na web, agenda e envio de "
-    "e-mail) — use-as sempre que a pergunta do usuário depender de dados externos, "
-    "atuais, ou de uma ação concreta (criar evento, enviar e-mail). Não invente dados "
-    "que uma ferramenta poderia checar. Responda em português do Brasil, de forma "
-    "direta e útil. Depois de usar ferramentas, sempre feche com uma resposta em "
-    "texto explicando o resultado para o usuário."
+    "You are TaskMind, a personal assistant for content creators. "
+    "You have real tools available (weather, web search, calendar and email) — "
+    "use them whenever the user's question depends on external or current data, "
+    "or on taking a concrete action (creating an event, sending an email). "
+    "Don't make up data that a tool could check. Reply in English, directly and "
+    "helpfully. After using tools, always close with a text response explaining "
+    "the result to the user."
 )
 
 client = AsyncAnthropic(api_key=settings.anthropic_api_key)
@@ -23,22 +23,22 @@ client = AsyncAnthropic(api_key=settings.anthropic_api_key)
 async def _run_tool(name: str, tool_input: dict) -> dict:
     executor = EXECUTORS.get(name)
     if executor is None:
-        return {"error": True, "message": f"Ferramenta desconhecida: {name}"}
+        return {"error": True, "message": f"Unknown tool: {name}"}
     try:
         return await asyncio.wait_for(
             executor(tool_input), timeout=settings.tool_timeout_seconds + 2
         )
     except asyncio.TimeoutError:
-        return {"error": True, "message": f"Ferramenta '{name}' excedeu o tempo limite."}
+        return {"error": True, "message": f"Tool '{name}' timed out."}
     except Exception as exc:  # tool bugs shouldn't crash the agent loop
-        return {"error": True, "message": f"Erro inesperado em '{name}': {exc}"}
+        return {"error": True, "message": f"Unexpected error in '{name}': {exc}"}
 
 
 async def stream_agent_response(messages: list[dict]) -> AsyncGenerator[dict, None]:
     """
-    Roda o loop de tool use da Anthropic, emitindo eventos conforme progride:
+    Runs the Anthropic tool use loop, emitting events as it progresses:
     tool_call -> tool_result -> ... -> text -> done.
-    `messages` é mutado in-place para acumular o histórico completo do turno.
+    `messages` is mutated in-place to accumulate the turn's full history.
     """
     for _ in range(settings.max_agent_rounds):
         try:
@@ -50,7 +50,7 @@ async def stream_agent_response(messages: list[dict]) -> AsyncGenerator[dict, No
                 messages=messages,
             )
         except Exception as exc:
-            yield {"type": "error", "message": f"Erro chamando o modelo: {exc}"}
+            yield {"type": "error", "message": f"Error calling the model: {exc}"}
             return
 
         text_blocks = [b for b in response.content if b.type == "text"]
@@ -60,8 +60,8 @@ async def stream_agent_response(messages: list[dict]) -> AsyncGenerator[dict, No
             if block.text.strip():
                 yield {"type": "text", "text": block.text}
 
-        # Serializa os content blocks pra dict puro, assim `messages` fica
-        # JSON-safe do início ao fim (útil pra devolver o histórico ao frontend).
+        # Serialize content blocks into plain dicts, so `messages` stays
+        # JSON-safe end to end (needed to return the history to the frontend).
         messages.append(
             {"role": "assistant", "content": [b.model_dump() for b in response.content]}
         )
@@ -89,4 +89,4 @@ async def stream_agent_response(messages: list[dict]) -> AsyncGenerator[dict, No
 
         messages.append({"role": "user", "content": tool_result_contents})
 
-    yield {"type": "error", "message": "Limite de iterações do agente atingido."}
+    yield {"type": "error", "message": "Agent iteration limit reached."}
